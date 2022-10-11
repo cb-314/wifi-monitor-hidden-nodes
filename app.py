@@ -17,20 +17,23 @@ if __name__ == "__main__":
         scan_time = 1
 
         subprocess.call(["iwconfig", adapter, "channel", str(channel)])
-        with subprocess.Popen((
-            "tcpdump", 
-            "-n", # don't convert addresses to names
-            "-K", # don't verify TCP checksums
-            "-t", # don't print timestamps
-            "-l", # put the interface in "monitor mode"
-            "-y", "IEEE802_11_RADIO", # activate radiotap headers explicitly
-            "-i", adapter), stdout=subprocess.PIPE) as p:
+        with subprocess.Popen(
+            (
+                "tcpdump", 
+                "-n", # don't convert addresses to names
+                "-K", # don't verify TCP checksums
+                "-t", # don't print timestamps
+                "-l", # put the interface in "monitor mode"
+                "-y", "IEEE802_11_RADIO", # activate radiotap headers explicitly
+                "-i", adapter
+            ), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as p:
             start_time = time.time()
             try:
                 for line in iter(p.stdout.readline, ""):
-                    chunks = line.split(" ")
-                    signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
-                    print(line, signals)
+                    print(line)
+                    #chunks = line.split(" ")
+                    #signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
+                    #print(line, signals)
             except:
                 pass
             curr_time = time.time()
