@@ -14,7 +14,7 @@ if __name__ == "__main__":
     #while True:
     for i in range(1):
         channel = 1
-        scan_time = 5
+        scan_time = 1
 
         subprocess.call(["iwconfig", adapter, "channel", str(channel)])
         with subprocess.Popen((
@@ -29,6 +29,9 @@ if __name__ == "__main__":
             try:
                 for line in iter(p.stdout.readline, ""):
                     print(line)
+                    chunks = line.split(" ")
+                    signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
+                    print(signals)
             except:
                 pass
             curr_time = time.time()
