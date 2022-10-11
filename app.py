@@ -35,13 +35,17 @@ if __name__ == "__main__":
             ), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as p:
             try:
                 for line in iter(p.stdout.readline, ""):
+                    # parse line
                     line = line.decode("utf8")
                     chunks = line.split(" ")
                     signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
                     signal_max = max([float(s.replace("dBm", "")) for s in signals])
                     print(signals, signal_max)
+
+                    # check if we have to stop
+                    curr_time = time.time()
+                    print(curr_time - start_time, scan_time)
+                    if curr_time - start_time > scan_time:
+                        p.terminate()
             except:
                 pass
-            curr_time = time.time()
-            if curr_time - start_time > scan_time:
-                p.kill()
