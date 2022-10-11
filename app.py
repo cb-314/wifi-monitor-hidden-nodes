@@ -16,7 +16,7 @@ if __name__ == "__main__":
     for i in range(1):
         # parameters
         channel = 1
-        scan_time = 1
+        scan_time = 3
 
         # set channel
         subprocess.call(["iwconfig", adapter, "channel", str(channel)])
@@ -44,7 +44,6 @@ if __name__ == "__main__":
 
                     # check if we have to stop
                     curr_time = time.time()
-                    print(curr_time - start_time, scan_time)
                     if curr_time - start_time > scan_time:
                         p.terminate()
             except:
