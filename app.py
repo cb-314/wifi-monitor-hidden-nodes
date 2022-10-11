@@ -27,7 +27,7 @@ if __name__ == "__main__":
     results = []
     for idx_loop in range(n_loop):
         # set channel
-        channel = random.choice(channels.values())
+        channel = random.choice([c for c in channels.values()])
         subprocess.call(["iwconfig", adapter, "channel", str(channel)])
 
         # start scanning
