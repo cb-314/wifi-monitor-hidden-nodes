@@ -9,11 +9,8 @@ if __name__ == "__main__":
     subprocess.call(["ifconfig", adapter, "down"])
     subprocess.call(["iwconfig", adapter, "mode", "monitor"])
     subprocess.call(["ifconfig", adapter, "up"])
-
-    # find your own mac addr
-    output = subprocess.check_output(["ifconfig", "-a", adapter])
-    my_addr = "-".join([x.lower() for x in output.split(" ")[output.split(" ").index("HWaddr")+1].split("-")[:6]])
-
+    
+    # start scanning
     while True:
         channel = 1
         scan_time = 5
