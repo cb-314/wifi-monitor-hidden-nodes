@@ -6,8 +6,8 @@ import csv
 if __name__ == "__main__":
     # parameters
     adapter = "wlan0"
-    n_loop = 1
-    scan_time = 1
+    n_loop = 100
+    scan_time = 3
     output_name = "wmhn-result.csv"
 
     # setup wifi adapter
