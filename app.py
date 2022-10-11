@@ -14,6 +14,7 @@ if __name__ == "__main__":
     # get channel list
     channels = subprocess.check_output(["iwlist", adapter, "channel"])
     channels = channels.decode("utf8").split("\n")
+    channels = [c.strip() for c in channels]
     channels = [c for c in channels if c.startswith("Channel")]
     print(channels)
     
