@@ -11,12 +11,19 @@ if __name__ == "__main__":
     subprocess.call(["ifconfig", adapter, "up"])
     
     # start scanning
-    while True:
+    #while True:
+    for i in range(1):
         channel = 1
         scan_time = 5
 
         subprocess.call(["iwconfig", adapter, "channel", str(channel)])
-        with subprocess.Popen(("tcpdump", "-l", "-e", "-i", adapter), stdout=subprocess.PIPE) as p:
+        with subprocess.Popen((
+            "tcpdump", 
+            "-n", # don't convert addresses to names
+            "-K", # don't verify TCP checksums
+            "-t", # don't print timestamps
+            "-l", # put the interface in "monitor mode"
+            "-i", adapter), stdout=subprocess.PIPE) as p:
             start_time = time.time()
             try:
                 for line in iter(p.stdout.readline, ""):
