@@ -28,10 +28,9 @@ if __name__ == "__main__":
             start_time = time.time()
             try:
                 for line in iter(p.stdout.readline, ""):
-                    print(line)
                     chunks = line.split(" ")
                     signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
-                    print(signals)
+                    print(line, signals)
             except:
                 pass
             curr_time = time.time()
