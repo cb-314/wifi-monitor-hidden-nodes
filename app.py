@@ -49,7 +49,7 @@ if __name__ == "__main__":
                     chunks = line.split(" ")
                     freq = int(chunks[chunks.index("MHz")-1])
                     signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
-                    signal_max = max([float(s.replace("dBm", "")) for s in signals])
+                    signal_max = max([int(float(s.replace("dBm", ""))) for s in signals])
                     results.append({
                         "loop": idx_loop,
                         "channel": channels[freq],
