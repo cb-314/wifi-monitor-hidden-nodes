@@ -17,7 +17,7 @@ if __name__ == "__main__":
     channels = [c.strip() for c in channels]
     channels = [c.split(":") for c in channels if c.startswith("Channel")]
     channels = {int(c.replace("Channel", "").strip()): int(float(f.replace("GHz", "").strip())*1000) for c,f in channels}
-    print(channels)
+    channels = {f:c for c, f in channels.items()}
     
     # main loop
     #while True:
@@ -49,7 +49,7 @@ if __name__ == "__main__":
                     freq = int(chunks[chunks.index("MHz")-1])
                     signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
                     signal_max = max([float(s.replace("dBm", "")) for s in signals])
-                    print(freq, signal_max)
+                    print(freq, channels[freq], signal_max)
 
                     # check if we have to stop
                     curr_time = time.time()
