@@ -23,7 +23,7 @@ if __name__ == "__main__":
             "-K", # don't verify TCP checksums
             "-t", # don't print timestamps
             "-l", # put the interface in "monitor mode"
-            "-y IEEE802_11_RADIO", # activate radiotap headers explicitly
+            "-y", "IEEE802_11_RADIO", # activate radiotap headers explicitly
             "-i", adapter), stdout=subprocess.PIPE) as p:
             start_time = time.time()
             try:
