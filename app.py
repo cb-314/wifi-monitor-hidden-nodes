@@ -38,9 +38,10 @@ if __name__ == "__main__":
                     # parse line
                     line = line.decode("utf8")
                     chunks = line.split(" ")
+                    freq = int(chunks[chunks.index("MHz")-1])
                     signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
                     signal_max = max([float(s.replace("dBm", "")) for s in signals])
-                    print(signals, signal_max)
+                    print(freq, signal_max)
 
                     # check if we have to stop
                     curr_time = time.time()
