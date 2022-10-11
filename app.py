@@ -10,6 +10,10 @@ if __name__ == "__main__":
     subprocess.call(["ifconfig", adapter, "down"])
     subprocess.call(["iwconfig", adapter, "mode", "monitor"])
     subprocess.call(["ifconfig", adapter, "up"])
+
+    # get channel list
+    channels = subprocess.check_output("iwlist", adapter, "channels")
+    print(channels)
     
     # main loop
     #while True:
