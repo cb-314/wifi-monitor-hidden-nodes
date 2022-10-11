@@ -30,12 +30,13 @@ if __name__ == "__main__":
             start_time = time.time()
             try:
                 for line in iter(p.stdout.readline, ""):
-                    print(line)
-                    #chunks = line.split(" ")
-                    #signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
-                    #print(line, signals)
+                    line = line.decode("utf8")
+                    chunks = line.split(" ")
+                    signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
+                    signal_max = max([float(s.replace("dBm", "")) for s in signals])
+                    print(signals, signal_max)
             except:
                 pass
             curr_time = time.time()
             if curr_time - start_time > scan_time:
-                p.terminate()
+                p.kill()
