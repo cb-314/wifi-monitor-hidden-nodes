@@ -3,6 +3,7 @@ import time
 from turtle import st
 
 if __name__ == "__main__":
+    # parameters
     adapter = "wlan0"
 
     # setup wifi adapter
@@ -10,13 +11,18 @@ if __name__ == "__main__":
     subprocess.call(["iwconfig", adapter, "mode", "monitor"])
     subprocess.call(["ifconfig", adapter, "up"])
     
-    # start scanning
+    # main loop
     #while True:
     for i in range(1):
+        # parameters
         channel = 1
         scan_time = 1
 
+        # set channel
         subprocess.call(["iwconfig", adapter, "channel", str(channel)])
+
+        # start scanning
+        start_time = time.time()
         with subprocess.Popen(
             (
                 "tcpdump", 
@@ -27,7 +33,6 @@ if __name__ == "__main__":
                 "-y", "IEEE802_11_RADIO", # activate radiotap headers explicitly
                 "-i", adapter
             ), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as p:
-            start_time = time.time()
             try:
                 for line in iter(p.stdout.readline, ""):
                     line = line.decode("utf8")
