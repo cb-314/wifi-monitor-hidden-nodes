@@ -6,8 +6,8 @@ import csv
 if __name__ == "__main__":
     # parameters
     adapter = "wlan0"
-    n_loop = 100
-    scan_time = 3
+    n_loop = 10
+    scan_time = 1
     output_name = "wmhn-result.csv"
 
     # setup wifi adapter
@@ -29,6 +29,13 @@ if __name__ == "__main__":
         # set channel
         channel = random.choice([c for c in channels.values()])
         subprocess.call(["iwconfig", adapter, "channel", str(channel)])
+
+        # add dummy row for the case there was no packet
+        results.append({
+            "loop": idx_loop,
+            "channel": channels[freq],
+            "signal": "" # this should work as empty
+        })
 
         # start scanning
         start_time = time.time()
