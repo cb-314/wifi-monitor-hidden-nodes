@@ -33,7 +33,7 @@ if __name__ == "__main__":
         # add dummy row for the case there was no packet
         results.append({
             "loop": idx_loop,
-            "channel": channels[freq],
+            "channel": channel,
             "signal": "" # this should work as empty
         })
 
