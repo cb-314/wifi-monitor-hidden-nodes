@@ -42,6 +42,7 @@ if __name__ == "__main__":
             writer.writerow(result)
 
             # start scanning
+            results = []
             start_time = time.time()
             with subprocess.Popen(
                 (
@@ -67,7 +68,7 @@ if __name__ == "__main__":
                             "channel": channels[freq],
                             "signal": signal_max
                         }
-                        writer.writerow(result)
+                        results.append(result)
 
                         # check if we have to stop
                         curr_time = time.time()
@@ -75,3 +76,5 @@ if __name__ == "__main__":
                             p.terminate()
                 except:
                     pass
+            for result in results:
+                writer.writerow(result)
