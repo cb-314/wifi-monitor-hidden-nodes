@@ -59,6 +59,7 @@ if __name__ == "__main__":
                     signal_max = max([int(float(s.replace("dBm", ""))) for s in signals])
                     results.append({
                         "loop": idx_loop,
+                        "time": time.time(),
                         "channel": channels[freq],
                         "signal": signal_max
                     })
