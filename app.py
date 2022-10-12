@@ -24,55 +24,54 @@ if __name__ == "__main__":
     channels = {f:c for c, f in channels.items()}
     
     # main loop
-    results = []
-    for idx_loop in range(n_loop):
-        # set channel
-        channel = random.choice([c for c in channels.values()])
-        subprocess.call(["iwconfig", adapter, "channel", str(channel)])
-
-        # add dummy row for the case there was no packet
-        results.append({
-            "loop": idx_loop,
-            "channel": channel,
-            "signal": "" # this should work as empty
-        })
-
-        # start scanning
-        start_time = time.time()
-        with subprocess.Popen(
-            (
-                "tcpdump", 
-                "-n", # don't convert addresses to names
-                "-K", # don't verify TCP checksums
-                "-t", # don't print timestamps
-                "-l", # put the interface in "monitor mode"
-                "-y", "IEEE802_11_RADIO", # activate radiotap headers explicitly
-                "-i", adapter
-            ), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as p:
-            try:
-                for line in iter(p.stdout.readline, ""):
-                    # parse line
-                    line = line.decode("utf8")
-                    chunks = line.split(" ")
-                    freq = int(chunks[chunks.index("MHz")-1])
-                    signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
-                    signal_max = max([int(float(s.replace("dBm", ""))) for s in signals])
-                    results.append({
-                        "loop": idx_loop,
-                        "time": time.time(),
-                        "channel": channels[freq],
-                        "signal": signal_max
-                    })
-
-                    # check if we have to stop
-                    curr_time = time.time()
-                    if curr_time - start_time > scan_time:
-                        p.terminate()
-            except:
-                pass
-    
     with open(output_name, "w", newline="") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=[k for k in results[0].keys()])
+        writer = csv.DictWriter(csvfile, fieldnames=["loop", "time", "channel", "signal"])
         writer.writeheader()
-        for result in results:
+        for idx_loop in range(n_loop):
+            # set channel
+            channel = random.choice([c for c in channels.values()])
+            subprocess.call(["iwconfig", adapter, "channel", str(channel)])
+
+            # add dummy row for the case there was no packet
+            result = {
+                "loop": idx_loop,
+                "time": time.time(),
+                "channel": channel,
+                "signal": "" # this should work as empty
+            }
             writer.writerow(result)
+
+            # start scanning
+            start_time = time.time()
+            with subprocess.Popen(
+                (
+                    "tcpdump", 
+                    "-n", # don't convert addresses to names
+                    "-K", # don't verify TCP checksums
+                    "-t", # don't print timestamps
+                    "-l", # put the interface in "monitor mode"
+                    "-y", "IEEE802_11_RADIO", # activate radiotap headers explicitly
+                    "-i", adapter
+                ), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as p:
+                try:
+                    for line in iter(p.stdout.readline, ""):
+                        # parse line
+                        line = line.decode("utf8")
+                        chunks = line.split(" ")
+                        freq = int(chunks[chunks.index("MHz")-1])
+                        signals = [chunk for chunk in chunks if chunk.startswith("-") and chunk.endswith("dBm")]
+                        signal_max = max([int(float(s.replace("dBm", ""))) for s in signals])
+                        result = {
+                            "loop": idx_loop,
+                            "time": time.time(),
+                            "channel": channels[freq],
+                            "signal": signal_max
+                        }
+                        writer.writerow(result)
+
+                        # check if we have to stop
+                        curr_time = time.time()
+                        if curr_time - start_time > scan_time:
+                            p.terminate()
+                except:
+                    pass
